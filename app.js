@@ -1,10 +1,41 @@
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 const cookieNotice = document.querySelector('#cookie-notice');
 const cookieConsentName = 'ilmira_cookie_consent';
+const metrikaCounterId = 113009416;
+let metrikaStarted = false;
 
 const hasCookieConsent = () => document.cookie
   .split('; ')
-  .some(cookie => cookie.startsWith(`${cookieConsentName}=`));
+  .some(cookie => cookie === `${cookieConsentName}=accepted`);
+
+const startMetrika = () => {
+  if (metrikaStarted || !['ilmirakirim.ru', 'www.ilmirakirim.ru'].includes(window.location.hostname)) return;
+  metrikaStarted = true;
+
+  (function (m, e, t, r, i, k, a) {
+    m[i] = m[i] || function () { (m[i].a = m[i].a || []).push(arguments); };
+    m[i].l = 1 * new Date();
+    for (let j = 0; j < document.scripts.length; j++) {
+      if (document.scripts[j].src === r) return;
+    }
+    k = e.createElement(t);
+    a = e.getElementsByTagName(t)[0];
+    k.async = 1;
+    k.src = r;
+    a.parentNode.insertBefore(k, a);
+  })(window, document, 'script', `https://mc.yandex.ru/metrika/tag.js?id=${metrikaCounterId}`, 'ym');
+
+  window.ym(metrikaCounterId, 'init', {
+    ssr: true,
+    webvisor: true,
+    clickmap: true,
+    ecommerce: 'dataLayer',
+    referrer: document.referrer,
+    url: window.location.href,
+    accurateTrackBounce: true,
+    trackLinks: true
+  });
+};
 
 const saveCookieConsent = () => {
   const secure = window.location.protocol === 'https:' ? '; Secure' : '';
@@ -12,7 +43,6 @@ const saveCookieConsent = () => {
 };
 
 const dismissCookieNotice = () => {
-  saveCookieConsent();
   cookieNotice.classList.add('is-closing');
   window.setTimeout(() => {
     cookieNotice.hidden = true;
@@ -20,13 +50,19 @@ const dismissCookieNotice = () => {
   }, reduceMotion.matches ? 0 : 220);
 };
 
-if (!hasCookieConsent()) {
+if (hasCookieConsent()) {
+  startMetrika();
+} else {
   cookieNotice.hidden = false;
   cookieNotice.setAttribute('aria-hidden', 'false');
   requestAnimationFrame(() => cookieNotice.classList.add('is-visible'));
 }
 
-cookieNotice.querySelector('.cookie-notice-accept').addEventListener('click', dismissCookieNotice);
+cookieNotice.querySelector('.cookie-notice-accept').addEventListener('click', () => {
+  saveCookieConsent();
+  startMetrika();
+  dismissCookieNotice();
+});
 cookieNotice.querySelector('.cookie-notice-close').addEventListener('click', dismissCookieNotice);
 
 const serviceDialog = document.querySelector('#service-dialog');

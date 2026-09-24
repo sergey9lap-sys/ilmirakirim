@@ -113,11 +113,11 @@
         <form id="request-form" class="record-form" data-message="Хочу на стратегический аудит">
           <noscript>Для записи напишите Ильмире в Телеграме: @Ilmirakirim.</noscript>
           <div class="form-row">
-            <label>Имя<input name="name" autocomplete="name" placeholder="Как к вам обращаться" required maxlength="80"></label>
-            <label>Электронная почта<input name="email" type="email" autocomplete="email" placeholder="name@example.ru" required maxlength="120"></label>
+            <label>Имя<input class="ym-disable-keys" name="name" autocomplete="name" placeholder="Как к вам обращаться" required maxlength="80"></label>
+            <label>Электронная почта<input class="ym-disable-keys" name="email" type="email" autocomplete="email" placeholder="name@example.ru" required maxlength="120"></label>
             <div class="phone-entry">
               <label>Код страны<span class="phone-country-wrap"><select name="country" class="phone-country-select" required><option value="RU">Россия +7</option></select><span class="phone-country-code" aria-hidden="true">+7</span></span></label>
-              <label>Телефон<input name="phone" type="tel" autocomplete="tel-national" inputmode="tel" placeholder="Номер" required maxlength="30" title="Введите номер выбранной страны; международный формат с + тоже допустим"></label>
+              <label>Телефон<input class="ym-disable-keys" name="phone" type="tel" autocomplete="tel-national" inputmode="tel" placeholder="Номер" required maxlength="30" title="Введите номер выбранной страны; международный формат с + тоже допустим"></label>
             </div>
           </div>
           <input type="hidden" name="service" value="Стратегический аудит">
@@ -171,7 +171,7 @@
   <button class="cookie-notice-close" type="button" aria-label="Закрыть уведомление">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
   </button>
-  <p>Сайт использует cookie-файлы, чтобы корректно работать и запоминать ваш выбор. Продолжая работу с сайтом, вы соглашаетесь с их использованием в соответствии с <a href="documents/privacy-policy.docx">политикой конфиденциальности</a>.</p>
+  <p>Сайт использует cookie-файлы для работы и запоминания вашего выбора. С вашего согласия подключается Яндекс.Метрика для анализа посещений. Подробнее — в <a href="documents/privacy-policy.docx">политике конфиденциальности</a>.</p>
   <button class="cookie-notice-accept" type="button">Согласиться</button>
 </aside>
 <dialog class="service-dialog" id="service-dialog" aria-labelledby="service-dialog-title">
@@ -182,11 +182,11 @@
   </div>
   <form id="service-form" class="record-form">
     <div class="form-row">
-      <label>Имя<input name="name" autocomplete="name" placeholder="Как к вам обращаться" required maxlength="80"></label>
-      <label>Электронная почта<input name="email" type="email" autocomplete="email" placeholder="name@example.ru" required maxlength="120"></label>
+      <label>Имя<input class="ym-disable-keys" name="name" autocomplete="name" placeholder="Как к вам обращаться" required maxlength="80"></label>
+      <label>Электронная почта<input class="ym-disable-keys" name="email" type="email" autocomplete="email" placeholder="name@example.ru" required maxlength="120"></label>
       <div class="phone-entry">
         <label>Код страны<span class="phone-country-wrap"><select name="country" class="phone-country-select" required><option value="RU">Россия +7</option></select><span class="phone-country-code" aria-hidden="true">+7</span></span></label>
-        <label>Телефон<input name="phone" type="tel" autocomplete="tel-national" inputmode="tel" placeholder="Номер" required maxlength="30" title="Введите номер выбранной страны; международный формат с + тоже допустим"></label>
+        <label>Телефон<input class="ym-disable-keys" name="phone" type="tel" autocomplete="tel-national" inputmode="tel" placeholder="Номер" required maxlength="30" title="Введите номер выбранной страны; международный формат с + тоже допустим"></label>
       </div>
     </div>
     <input type="hidden" name="service" value="">
