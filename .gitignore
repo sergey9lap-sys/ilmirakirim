@@ -1,5 +1,13 @@
 .DS_Store
 Thumbs.db
-node_modules/
 dist/
 *.log
+.env
+.env.*
+!.env.example
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+.local-data/
+node_modules/
+.impeccable/

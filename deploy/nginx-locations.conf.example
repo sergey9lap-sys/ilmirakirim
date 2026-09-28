@@ -1,0 +1,22 @@
+# Add inside the existing HTTPS server block for ilmirakirim.com.
+# Keep the existing static-site root and the .ru -> .com redirect unchanged.
+location ^~ /api/ {
+    client_max_body_size 16k;
+    proxy_pass http://127.0.0.1:4314;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-Proto $scheme;
+}
+
+location ^~ /cabinet/ {
+    proxy_pass http://127.0.0.1:4314;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-Proto $scheme;
+}
+
+# Do not expose server code, deployment examples, tests or local metadata
+# through the static site's document root.
+location ~ ^/(server|deploy|tests)/ { return 404; }
+location ~ /\.(?!well-known/) { return 404; }
+location ~ ^/(README\.md|package\.json)$ { return 404; }

@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Заявки · Ильмира Кирим</title>
+  <link rel="stylesheet" href="/cabinet/app.css">
+  <script src="/cabinet/app.js" defer></script>
+</head>
+<body>
+  <main class="shell">
+    <header class="topline">
+      <div><span class="brand">Ильмира Кирим</span><span class="divider" aria-hidden="true"></span><span class="section-name">Заявки с сайта</span></div>
+      <button type="button" id="logout" class="quiet" hidden>Выйти</button>
+    </header>
+    <section id="login-view" class="login-view" aria-labelledby="login-title">
+      <div class="login-copy"><h1 id="login-title">Вход в заявки</h1><p>Здесь хранятся обращения с сайта. Доступ есть только у вас.</p></div>
+      <form id="login-form" class="login-form">
+        <label for="password">Пароль</label>
+        <input id="password" name="password" type="password" autocomplete="current-password" required>
+        <button type="submit" class="primary">Войти</button>
+        <p id="login-status" class="status" role="alert"></p>
+      </form>
+    </section>
+    <section id="leads-view" class="leads-view" aria-labelledby="leads-title" hidden>
+      <div class="heading"><div><h1 id="leads-title">Новые обращения</h1><p>Контакты посетителей, оставивших заявку на сайте.</p></div><span id="lead-count" class="count"></span></div>
+      <div class="tools"><label for="search">Найти заявку</label><input id="search" type="search" placeholder="Имя, почта, телефон или услуга" autocomplete="off"></div>
+      <p id="leads-status" class="status" role="status"></p>
+      <div id="lead-list" class="lead-list"></div>
+    </section>
+  </main>
+</body>
+</html>

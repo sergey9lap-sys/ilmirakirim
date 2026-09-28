@@ -1,0 +1,22 @@
+[Unit]
+Description=Ilmira website lead service
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=ilmira-leads
+Group=ilmira-leads
+WorkingDirectory=/srv/ilmirakirim
+EnvironmentFile=/etc/ilmira-leads.env
+ExecStart=/usr/bin/node /srv/ilmirakirim/server/index.mjs
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ReadWritePaths=/var/lib/ilmira-leads
+
+[Install]
+WantedBy=multi-user.target
