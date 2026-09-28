@@ -13,4 +13,4 @@ Allow: /
 User-agent: Google-Extended
 Allow: /
 
-Sitemap: https://ilmirakirim.ru/sitemap.xml
+Sitemap: https://ilmirakirim.com/sitemap.xml

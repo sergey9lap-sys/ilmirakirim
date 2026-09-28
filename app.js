@@ -9,7 +9,7 @@ const hasCookieConsent = () => document.cookie
   .some(cookie => cookie === `${cookieConsentName}=accepted`);
 
 const startMetrika = () => {
-  if (metrikaStarted || !['ilmirakirim.ru', 'www.ilmirakirim.ru'].includes(window.location.hostname)) return;
+  if (metrikaStarted || !['ilmirakirim.com', 'www.ilmirakirim.com'].includes(window.location.hostname)) return;
   metrikaStarted = true;
 
   (function (m, e, t, r, i, k, a) {
@@ -153,10 +153,15 @@ document.querySelectorAll('.record-form').forEach(form => {
   });
 });
 
+const savedFormValues = new WeakMap();
 document.querySelectorAll('.record-form').forEach(form => {
   const messengerButtons = Array.from(form.querySelectorAll('[data-messenger]'));
-  form.addEventListener('submit', event => event.preventDefault());
-  messengerButtons.forEach(button => button.addEventListener('click', () => {
+  form.addEventListener('submit', event => {
+    event.preventDefault();
+    form.querySelector('.form-status').textContent = 'Выберите удобный мессенджер, чтобы сохранить заявку.';
+    messengerButtons[0]?.focus();
+  });
+  messengerButtons.forEach(button => button.addEventListener('click', async () => {
     messengerButtons.forEach(item => item.setAttribute('aria-pressed', String(item === button)));
     form.querySelectorAll('input[type="tel"]').forEach(input => validatePhone(input));
     if (!form.reportValidity()) return;
@@ -167,17 +172,58 @@ document.querySelectorAll('.record-form').forEach(form => {
       whatsapp: `https://api.whatsapp.com/send/?phone=79174678700&text=${encodedMessage}`,
       max: 'https://max.ru/u/f9LHodD0cOLRWDX_zzh9jrKMMMfNdTBlYNt9mufT-kFZwIGb8zte1_3nHVA'
     };
-    const url = urls[button.dataset.messenger];
-    window.open(url, '_blank', 'noopener');
-    if (button.dataset.messenger === 'max') {
-      copyMessage(message).then(copied => {
-        form.querySelector('.form-status').textContent = copied
-          ? 'Сообщение скопировано. Вставьте его в открывшийся чат в Максе.'
-          : `Макс открыт. Отправьте Ильмире сообщение: «${message}»`;
-      });
-      return;
+    const status = form.querySelector('.form-status');
+    const popup = window.open('about:blank', '_blank');
+    if (popup) popup.opener = null;
+    messengerButtons.forEach(item => { item.disabled = true; });
+    status.textContent = 'Сохраняем заявку…';
+    try {
+      const data = new FormData(form);
+      const lead = {
+        name: data.get('name'), email: data.get('email'), phone: data.get('phone'),
+        country: data.get('country'), service: data.get('service'),
+        messenger: button.dataset.messenger,
+        offerAccepted: data.has('offer-acceptance'),
+        personalDataAccepted: data.has('personal-data'),
+        mailingAccepted: data.has('mailing')
+      };
+      const values = JSON.stringify({ ...lead, messenger: null });
+      if (savedFormValues.get(form) !== values) {
+        const response = await fetch('/api/leads', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify(lead)
+        });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || 'Не удалось сохранить заявку. Попробуйте ещё раз.');
+        savedFormValues.set(form, values);
+      }
+      if (button.dataset.messenger === 'max') {
+        const copied = await copyMessage(message);
+        status.textContent = copied
+          ? 'Заявка сохранена. Сообщение скопировано — вставьте его в открывшийся чат в Максе.'
+          : `Заявка сохранена. Отправьте Ильмире сообщение: «${message}»`;
+      } else {
+        status.textContent = 'Заявка сохранена. Открываем чат с Ильмирой.';
+      }
+      if (popup) popup.location.href = urls[button.dataset.messenger];
+      else {
+        status.textContent += ' Чат не открылся автоматически. ';
+        const link = document.createElement('a');
+        link.href = urls[button.dataset.messenger];
+        link.target = '_blank';
+        link.rel = 'noopener';
+        link.textContent = 'Открыть чат';
+        status.append(link);
+      }
+    } catch (error) {
+      if (popup) popup.close();
+      status.textContent = error instanceof TypeError || error instanceof SyntaxError
+        ? 'Не удалось связаться с сайтом. Проверьте соединение и попробуйте ещё раз.'
+        : error.message || 'Не удалось сохранить заявку. Попробуйте ещё раз.';
+    } finally {
+      messengerButtons.forEach(item => { item.disabled = false; });
     }
-    form.querySelector('.form-status').textContent = '';
   }));
 });
 

@@ -1,0 +1,17 @@
+[Unit]
+Description=Back up Ilmira website leads database
+After=ilmira-leads.service
+
+[Service]
+Type=oneshot
+User=ilmira-leads
+Group=ilmira-leads
+WorkingDirectory=/srv/ilmirakirim
+EnvironmentFile=/etc/ilmira-leads.env
+ExecStart=/usr/bin/node /srv/ilmirakirim/server/backup.mjs
+UMask=0077
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ReadWritePaths=/var/lib/ilmira-leads /var/backups/ilmira-leads

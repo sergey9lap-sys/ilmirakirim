@@ -5,7 +5,7 @@ import vm from 'node:vm';
 const source = readFileSync(new URL('../app.js', import.meta.url), 'utf8');
 const bootstrap = source.slice(0, source.indexOf('const serviceDialog ='));
 
-function run({ hostname = 'ilmirakirim.ru', consent = false } = {}) {
+function run({ hostname = 'ilmirakirim.com', consent = false } = {}) {
   const listeners = new Map();
   const insertedScripts = [];
   let cookie = consent ? 'ilmira_cookie_consent=accepted' : '';
@@ -52,6 +52,8 @@ assert.equal(accepted.window.ym.a[0][0], 113009416);
 assert.equal(accepted.window.ym.a[0][1], 'init');
 
 assert.equal(run({ consent: true }).insertedScripts.length, 1);
+assert.equal(run({ hostname: 'www.ilmirakirim.com', consent: true }).insertedScripts.length, 1);
+assert.equal(run({ hostname: 'ilmirakirim.ru', consent: true }).insertedScripts.length, 0);
 assert.equal(run({ hostname: 'localhost', consent: true }).insertedScripts.length, 0);
 
 console.log('Metrika consent checks passed');
