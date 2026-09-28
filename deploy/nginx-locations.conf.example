@@ -19,4 +19,4 @@ location ^~ /cabinet/ {
 # through the static site's document root.
 location ~ ^/(server|deploy|tests)/ { return 404; }
 location ~ /\.(?!well-known/) { return 404; }
-location ~ ^/(README\.md|package\.json)$ { return 404; }
+location ~ ^/(README\.md|package(-lock)?\.json)$ { return 404; }
