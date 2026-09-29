@@ -4,7 +4,7 @@ import { randomBytes, createHash, scryptSync, timingSafeEqual } from 'node:crypt
 import { mkdirSync, chmodSync, readFileSync } from 'node:fs';
 import { isAbsolute, join, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { telegramLeadNotice } from './telegram-notice.mjs';
+import { relayConfigured, sendLeadNotification } from './notification-transport.mjs';
 
 const origin = process.env.PUBLIC_ORIGIN || 'https://ilmirakirim.com';
 const dataDir = process.env.DATA_DIR;
@@ -12,6 +12,7 @@ const passwordHash = process.env.ADMIN_PASSWORD_HASH;
 const host = process.env.HOST || '127.0.0.1';
 const port = Number(process.env.PORT || 4314);
 const secureCookies = process.env.NODE_ENV === 'production';
+const useRelay = relayConfigured();
 
 if (!dataDir || !isAbsolute(dataDir)) throw new Error('DATA_DIR must be an absolute path outside the public site');
 const siteRoot = resolve(fileURLToPath(new URL('../', import.meta.url)));
@@ -142,20 +143,11 @@ function verifyPassword(value) {
   return timingSafeEqual(actual, Buffer.from(expectedHex, 'hex'));
 }
 async function sendPendingNotices() {
-  const token = process.env.TELEGRAM_BOT_TOKEN;
-  const chatId = process.env.TELEGRAM_CHAT_ID;
-  if (!token || !chatId) return;
+  if (!useRelay && (!process.env.TELEGRAM_BOT_TOKEN || !process.env.TELEGRAM_CHAT_ID)) return;
   const pending = db.prepare('SELECT lead_id,attempts FROM notification_outbox WHERE sent_at IS NULL AND next_attempt_at<=? ORDER BY lead_id LIMIT 10').all(Date.now());
   for (const notice of pending) {
     try {
-      const response = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-        method: 'POST', headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ chat_id: chatId, ...telegramLeadNotice(notice.lead_id, origin) }),
-        signal: AbortSignal.timeout(8000)
-      });
-      if (!response.ok) throw new Error(`Telegram status ${response.status}`);
-      const payload = await response.json();
-      if (!payload.ok) throw new Error('Telegram rejected notification');
+      await sendLeadNotification(notice.lead_id, origin);
       db.prepare('UPDATE notification_outbox SET sent_at=? WHERE lead_id=?').run(new Date().toISOString(), notice.lead_id);
     } catch (error) {
       const delay = Math.min(3_600_000, 30_000 * 2 ** Math.min(notice.attempts, 7));
