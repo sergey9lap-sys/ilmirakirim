@@ -17,7 +17,7 @@ function sendThroughTunnel(token, method, body, port) {
       method: 'POST',
       path: `/bot${token}/${method}`,
       headers: { host: 'api.telegram.org', 'content-type': 'application/json', 'content-length': Buffer.byteLength(body) },
-      timeout: 8000
+      timeout: 20_000
     }, res => {
       let payload = '';
       res.setEncoding('utf8');
@@ -34,7 +34,7 @@ function sendThroughTunnel(token, method, body, port) {
       });
     });
     req.on('timeout', () => req.destroy(new Error('Telegram delivery timed out')));
-    req.on('error', () => reject(new Error('Telegram delivery failed')));
+    req.on('error', error => reject(new Error(`Telegram delivery failed (${error.code || 'network'})`)));
     req.end(body);
   });
 }
