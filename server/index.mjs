@@ -4,6 +4,7 @@ import { randomBytes, createHash, scryptSync, timingSafeEqual } from 'node:crypt
 import { mkdirSync, chmodSync, readFileSync } from 'node:fs';
 import { isAbsolute, join, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { telegramLeadNotice } from './telegram-notice.mjs';
 
 const origin = process.env.PUBLIC_ORIGIN || 'https://ilmirakirim.com';
 const dataDir = process.env.DATA_DIR;
@@ -149,7 +150,7 @@ async function sendPendingNotices() {
     try {
       const response = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
         method: 'POST', headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ chat_id: chatId, text: `Новая заявка №${notice.lead_id} на сайте Ильмиры. Открыть: ${origin}/cabinet/`, disable_web_page_preview: true }),
+        body: JSON.stringify({ chat_id: chatId, ...telegramLeadNotice(notice.lead_id, origin) }),
         signal: AbortSignal.timeout(8000)
       });
       if (!response.ok) throw new Error(`Telegram status ${response.status}`);
