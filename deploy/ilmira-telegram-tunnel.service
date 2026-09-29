@@ -1,0 +1,19 @@
+[Unit]
+Description=Encrypted Telegram API egress for Ilmira lead notifications
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=ilmira-tunnel
+Group=ilmira-tunnel
+ExecStart=/usr/bin/ssh -N -T -i /var/lib/ilmira-tunnel/.ssh/id_ed25519 -o BatchMode=yes -o StrictHostKeyChecking=yes -o ExitOnForwardFailure=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=3 -L 127.0.0.1:1443:api.telegram.org:443 ilmira-egress@85.193.86.175
+Restart=always
+RestartSec=5
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

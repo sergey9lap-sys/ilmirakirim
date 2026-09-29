@@ -4,7 +4,7 @@ import { randomBytes, createHash, scryptSync, timingSafeEqual } from 'node:crypt
 import { mkdirSync, chmodSync, readFileSync } from 'node:fs';
 import { isAbsolute, join, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { relayConfigured, sendLeadNotification } from './notification-transport.mjs';
+import { tunnelPort, sendLeadNotification } from './notification-transport.mjs';
 
 const origin = process.env.PUBLIC_ORIGIN || 'https://ilmirakirim.com';
 const dataDir = process.env.DATA_DIR;
@@ -12,7 +12,7 @@ const passwordHash = process.env.ADMIN_PASSWORD_HASH;
 const host = process.env.HOST || '127.0.0.1';
 const port = Number(process.env.PORT || 4314);
 const secureCookies = process.env.NODE_ENV === 'production';
-const useRelay = relayConfigured();
+tunnelPort();
 
 if (!dataDir || !isAbsolute(dataDir)) throw new Error('DATA_DIR must be an absolute path outside the public site');
 const siteRoot = resolve(fileURLToPath(new URL('../', import.meta.url)));
@@ -143,11 +143,13 @@ function verifyPassword(value) {
   return timingSafeEqual(actual, Buffer.from(expectedHex, 'hex'));
 }
 async function sendPendingNotices() {
-  if (!useRelay && (!process.env.TELEGRAM_BOT_TOKEN || !process.env.TELEGRAM_CHAT_ID)) return;
-  const pending = db.prepare('SELECT lead_id,attempts FROM notification_outbox WHERE sent_at IS NULL AND next_attempt_at<=? ORDER BY lead_id LIMIT 10').all(Date.now());
+  if (!process.env.TELEGRAM_BOT_TOKEN || !process.env.TELEGRAM_CHAT_ID) return;
+  const pending = db.prepare(`SELECT o.lead_id,o.attempts,l.name,l.email,l.phone,l.service,l.messenger
+    FROM notification_outbox o JOIN leads l ON l.id=o.lead_id
+    WHERE o.sent_at IS NULL AND o.next_attempt_at<=? ORDER BY o.lead_id LIMIT 10`).all(Date.now());
   for (const notice of pending) {
     try {
-      await sendLeadNotification(notice.lead_id, origin);
+      await sendLeadNotification({ id: notice.lead_id, ...notice }, origin);
       db.prepare('UPDATE notification_outbox SET sent_at=? WHERE lead_id=?').run(new Date().toISOString(), notice.lead_id);
     } catch (error) {
       const delay = Math.min(3_600_000, 30_000 * 2 ** Math.min(notice.attempts, 7));

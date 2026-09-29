@@ -1,22 +1,11 @@
 import { telegramLeadNotice } from './telegram-notice.mjs';
+import { telegramApiRequest } from './notification-transport.mjs';
 
 const token = process.env.TELEGRAM_BOT_TOKEN;
 if (!token) throw new Error('TELEGRAM_BOT_TOKEN is required');
 
 const [mode, chatId] = process.argv.slice(2);
-const api = `https://api.telegram.org/bot${token}`;
-
-async function telegram(method, body) {
-  const response = await fetch(`${api}/${method}`, {
-    method: 'POST',
-    headers: { 'content-type': 'application/json' },
-    body: JSON.stringify(body),
-    signal: AbortSignal.timeout(8000)
-  });
-  const result = await response.json();
-  if (!response.ok || !result.ok) throw new Error(`Telegram ${method} failed`);
-  return result.result;
-}
+const telegram = telegramApiRequest;
 
 if (mode === 'list-start-chats' && !chatId) {
   const webhook = await telegram('getWebhookInfo', {});
@@ -35,7 +24,14 @@ if (mode === 'list-start-chats' && !chatId) {
   }
   console.log(JSON.stringify([...chats.values()], null, 2));
 } else if (mode === 'send-preview' && /^\d+$/.test(chatId || '')) {
-  const notice = telegramLeadNotice(123, process.env.PUBLIC_ORIGIN || 'https://ilmirakirim.com');
+  const notice = telegramLeadNotice({
+    id: 123,
+    name: 'Тестовый клиент',
+    phone: '+7 900 000-00-00',
+    email: 'test@example.com',
+    service: 'Тестовая заявка',
+    messenger: 'telegram'
+  }, process.env.PUBLIC_ORIGIN || 'https://ilmirakirim.com');
   await telegram('sendMessage', {
     chat_id: chatId,
     ...notice,
