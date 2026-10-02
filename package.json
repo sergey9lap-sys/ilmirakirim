@@ -4,7 +4,7 @@
   "engines": { "node": ">=22.16.0" },
   "scripts": {
     "start": "node server/index.mjs",
-    "test": "node --test tests/leads.test.mjs tests/metrika-consent.test.mjs tests/telegram-notice.test.mjs tests/notification-transport.test.mjs",
+    "test": "node --test tests/leads.test.mjs tests/metrika-consent.test.mjs tests/telegram-notice.test.mjs tests/notification-transport.test.mjs tests/request-navigation.test.mjs",
     "backup": "node server/backup.mjs"
   }
 }
