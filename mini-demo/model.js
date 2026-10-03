@@ -1,5 +1,11 @@
 export const storageKey='ilmira-mini-demo-v1';
-export function initialState(){return {paid:false,lessonRead:false};}
-export function safeState(value){return {paid:value?.paid===true,lessonRead:value?.lessonRead===true};}
+export function initialState(){return {paid:false,lessonRead:false,lesson2Read:false,lesson3Read:false};}
+export function safeState(value){return {paid:value?.paid===true,lessonRead:value?.lessonRead===true,lesson2Read:value?.lesson2Read===true,lesson3Read:value?.lesson3Read===true};}
 export function balance(state){return 2500+(state.paid?1000:0);}
 export function referralUrl(origin,path='/mini-demo/'){return new URL(`${path}?ref=demo`,origin).href;}
+export const lessons=[
+ {key:'lessonRead',title:'С чего начать личную стратегию',description:'Определите цель, с которой хотите работать.',minutes:2,intro:'Прежде чем составлять план, полезно разобраться, к какому результату вы хотите прийти. Выберите одну цель: так проще увидеть, что действительно важно сейчас.',subheading:'Три вопроса для начала',questions:['Какого результата вы хотите достичь в ближайшие три месяца?','Что у вас уже хорошо получается и помогает двигаться к этому результату?','Какой один небольшой шаг вы можете сделать на этой неделе?'],ending:'Запишите ответы в заметках. Они пригодятся, когда вы будете выбирать следующий шаг.'},
+ {key:'lesson2Read',title:'На что вы можете опереться',description:'Соберите свои сильные стороны и ресурсы.',minutes:3,intro:'Начните не со списка того, чего не хватает, а с того, что уже есть. Ваш опыт, навыки и окружение могут стать опорой для следующего шага.',subheading:'Ваша опора',questions:['Какие задачи у вас получается решать особенно хорошо?','Какой опыт поможет вам приблизиться к выбранной цели?','К кому вы можете обратиться за советом или поддержкой?'],ending:'Выделите один ресурс, который можете использовать уже сейчас. Не обязательно начинать с больших изменений.'},
+ {key:'lesson3Read',title:'Ваш следующий шаг',description:'Выберите конкретное действие на ближайшую неделю.',minutes:2,intro:'Большую цель легче превратить в действие, если начать с небольшого понятного шага. Он должен зависеть от вас, а не от идеальных обстоятельств.',subheading:'От намерения к действию',questions:['Что конкретно вы сделаете на этой неделе?','Когда вы выделите время для этого действия?','По какому признаку поймёте, что шаг выполнен?'],ending:'Сохраните выбранный шаг и дату в заметках. После выполнения вернитесь к цели и определите следующее действие.'}
+];
+export function completedLessons(state){return lessons.filter(lesson=>state[lesson.key]).length;}
