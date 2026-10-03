@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-03T20:25:00+03:00",
+  "title": "Design System: Ильмира Кирим — тестовый кабинет",
+  "extensions": {
+    "colorMeta": {
+      "ink": {"role": "neutral", "displayName": "Чернильный", "tonalRamp": ["oklch(15% 0 0)","oklch(26% 0 0)","oklch(38% 0 0)","oklch(49% 0 0)","oklch(61% 0 0)","oklch(72% 0 0)","oklch(84% 0 0)","oklch(95% 0 0)"]},
+      "paper": {"role": "neutral", "displayName": "Белая основа", "tonalRamp": ["oklch(15% 0 0)","oklch(26% 0 0)","oklch(38% 0 0)","oklch(49% 0 0)","oklch(61% 0 0)","oklch(72% 0 0)","oklch(84% 0 0)","oklch(95% 0 0)"]},
+      "muted": {"role": "neutral", "displayName": "Тёплый приглушённый", "tonalRamp": ["oklch(15% .043 80)","oklch(26% .043 80)","oklch(38% .043 80)","oklch(49% .043 80)","oklch(61% .043 80)","oklch(72% .043 80)","oklch(84% .043 80)","oklch(95% .043 80)"]},
+      "gold": {"role": "secondary", "displayName": "Золото баланса", "tonalRamp": ["oklch(15% .106 84)","oklch(26% .106 84)","oklch(38% .106 84)","oklch(49% .106 84)","oklch(61% .106 84)","oklch(72% .106 84)","oklch(84% .106 84)","oklch(95% .106 84)"]},
+      "line": {"role": "neutral", "displayName": "Тонкая золотая линия", "tonalRamp": ["oklch(15% .06 84)","oklch(26% .06 84)","oklch(38% .06 84)","oklch(49% .06 84)","oklch(61% .06 84)","oklch(72% .06 84)","oklch(84% .06 84)","oklch(95% .06 84)"]},
+      "accent": {"role": "primary", "displayName": "Бордовый акцент", "tonalRamp": ["oklch(15% .16 13)","oklch(26% .16 13)","oklch(38% .16 13)","oklch(49% .16 13)","oklch(61% .16 13)","oklch(72% .16 13)","oklch(84% .16 13)","oklch(95% .16 13)"]}
+    },
+    "typographyMeta": {
+      "display": {"displayName": "Заголовок экрана", "purpose": "H1; 29px до 360px и 38px от 800px."},
+      "title": {"displayName": "Заголовок блока", "purpose": "H2 интерфейса; карточка урока использует Prata отдельно."},
+      "body": {"displayName": "Основной текст", "purpose": "Чтение пояснений и содержимого."},
+      "button": {"displayName": "Действие", "purpose": "Общий набор основных и вторичных кнопок."},
+      "amount": {"displayName": "Баланс", "purpose": "Табличные цифры; 36px до 360px."}
+    },
+    "shadows": [],
+    "motion": [],
+    "breakpoints": [{"name": "compact-max", "value": "360px"}, {"name": "desktop-min", "value": "800px"}],
+    "notes": ["Tonal ramps are synthesized panel previews, not implemented project palette tokens; CSS may gamut-map extreme samples.", "No transitions or geometric animation are implemented. Status lifetime is 5000ms, not a motion token.", "Browser finish verdict: ship for scoped demo. Detector degraded to regex fallback without parser; no clean certificate. Real Telegram device verification and bot menu installation remain pending."]
+  },
+  "components": [
+    {
+      "name": "Основная кнопка", "kind": "button", "refersTo": "button-primary", "description": "Единое бордовое действие, минимум 52px.",
+      "html": "<button class=\"ds-primary\">Скопировать ссылку</button>",
+      "css": ".ds-primary{display:flex;align-items:center;justify-content:center;width:100%;min-height:52px;padding:13px 18px;border:1px solid var(--accent,#b3364c);border-radius:12px;background:var(--accent,#b3364c);color:var(--paper,#fff);font:700 15px/1.5 Manrope,Arial,sans-serif;text-align:center;cursor:pointer}.ds-primary:focus-visible{outline:3px solid #906517;outline-offset:4px}.ds-primary:disabled{opacity:.6;cursor:default}@media(hover:hover){.ds-primary:hover{background:#95253a;border-color:#95253a;color:white}}"
+    },
+    {
+      "name": "Вторичная кнопка", "kind": "button", "refersTo": "button-secondary", "description": "Контур того же акцента и та же геометрия.",
+      "html": "<button class=\"ds-secondary\">Поделиться</button>",
+      "css": ".ds-secondary{display:flex;align-items:center;justify-content:center;width:100%;min-height:52px;padding:13px 18px;border:1px solid var(--accent,#b3364c);border-radius:12px;background:transparent;color:var(--accent,#b3364c);font:700 15px/1.5 Manrope,Arial,sans-serif;text-align:center;cursor:pointer}.ds-secondary:focus-visible{outline:3px solid #906517;outline-offset:4px}.ds-secondary:disabled{opacity:.6;cursor:default}@media(hover:hover){.ds-secondary:hover{background:#95253a;border-color:#95253a;color:white}}"
+    },
+    {
+      "name": "Поле ссылки", "kind": "input", "refersTo": "input-link", "description": "Только чтение; явная подпись и доступный фокус.",
+      "html": "<label class=\"ds-label\" for=\"ds-link\">Ваша демонстрационная ссылка</label><input class=\"ds-input\" id=\"ds-link\" readonly value=\"https://ilmirakirim.com/mini-demo/?ref=demo\">",
+      "css": ".ds-label{display:block;font:650 14px/1.6 Manrope,Arial,sans-serif;margin-bottom:8px;color:var(--ink,#101010)}.ds-input{display:block;width:100%;min-width:0;padding:14px;border:1px solid var(--line,#dac69e);border-radius:10px;background:var(--paper,#fff);font:14px/1.5 Manrope,Arial,sans-serif;color:var(--ink,#101010)}.ds-input:focus-visible{outline:3px solid #906517;outline-offset:4px}"
+    },
+    {
+      "name": "Баланс", "kind": "card", "refersTo": "balance", "description": "Золотая информационная поверхность без тени.",
+      "html": "<div class=\"ds-balance\"><h2 class=\"ds-balance-title\">Мои бонусы</h2><p class=\"ds-amount\">2 500 <span class=\"ds-unit\">бонусов</span></p><p class=\"ds-note\">Тестовый баланс. Условия настоящей программы ещё не утверждены.</p></div>",
+      "css": ".ds-balance{background:var(--gold,#d5af62);color:var(--ink,#101010);border-radius:var(--radius,16px);padding:24px;font-family:Manrope,Arial,sans-serif}.ds-balance-title{margin:0;font-size:20px;font-weight:650;line-height:1.4}.ds-amount{margin:18px 0 14px;font-size:42px;font-weight:650;line-height:1.15;letter-spacing:-.025em;font-variant-numeric:tabular-nums}.ds-unit{font-size:17px;font-weight:500;letter-spacing:0}.ds-note{margin:0;font-size:14px;line-height:1.6}@media(max-width:360px){.ds-balance{padding:20px}.ds-amount{font-size:36px}}"
+    },
+    {
+      "name": "Нижняя навигация", "kind": "nav", "description": "Четыре раздела; пример показан в потоке панели вместо fixed.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Разделы кабинета\"><a class=\"ds-nav-link\" href=\"#home\" aria-current=\"page\">Кабинет</a><a class=\"ds-nav-link\" href=\"#invite\">Пригласить</a><a class=\"ds-nav-link\" href=\"#bonuses\">Бонусы</a><a class=\"ds-nav-link\" href=\"#lessons\">Материалы</a></nav>",
+      "css": ".ds-nav{display:flex;justify-content:center;background:var(--paper,#fff);border-top:1px solid var(--line,#dac69e);padding:8px}.ds-nav-link{flex:1;max-width:160px;min-height:52px;display:grid;place-items:center;text-decoration:none;font:650 13px/1.6 Manrope,Arial,sans-serif;border-radius:10px;color:var(--muted,#615239)}.ds-nav-link[aria-current]{color:var(--ink,#101010);background:#f3e4c4}.ds-nav-link:focus-visible{outline:3px solid #906517;outline-offset:4px}@media(hover:hover){.ds-nav-link:hover{background:#f6f0e4}}@media(max-width:360px){.ds-nav-link{font-size:12px}}"
+    },
+    {
+      "name": "Демо-бейдж", "kind": "chip", "description": "Информационная маркировка, без интерактивных состояний.",
+      "html": "<span class=\"ds-demo\">Демо</span>",
+      "css": ".ds-demo{display:inline-block;font:750 13px/1.6 Manrope,Arial,sans-serif;color:var(--ink,#101010);padding:4px 12px;border:1px solid var(--line,#dac69e);border-radius:20px}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Личный кабинет в существующем бренде Ильмиры",
+    "overview": "Белая основа, заголовки Prata и интерфейс Manrope наследуют действующий сайт. Золотая поверхность выделяет баланс, бордовые действия обозначают следующий шаг. Это описание реализованной системы, а не новый согласованный визуальный мир.\n\nОдноколоночное оформление сохраняет спокойный ритм на телефоне и ограниченную ширину на desktop. Компоненты помогают прочитать данные и выполнить действие; декоративных медиа и эффектов здесь нет.",
+    "keyCharacteristics": ["Существующая пара Prata и Manrope.", "Золотой баланс, бордовое действие, белое пространство.", "Компактная колонка с постоянной нижней навигацией.", "Различимые основные, вторичные и текстовые действия."],
+    "rules": [{"name": "The Action Accent Rule", "body": "Основное действие использует бордовую заливку; вторичное — контур того же акцента и ту же геометрию.", "section": "colors"}],
+    "dos": ["Do наследовать Prata, Manrope, белую основу, золотой баланс и бордовые действия из существующего бренда.", "Do сохранять общую геометрию основных и вторичных кнопок на соответствующей ширине экрана.", "Do сохранять заметный фокус, семантические состояния и место для нижней навигации.", "Do держать маркировку демонстрационных данных видимой и сохранять текущие тексты."],
+    "donts": ["Don't подменять оригинальные брендовые элементы приблизительными аналогами или вводить новый визуальный мир.", "Don't превращать золото баланса в конкурирующий акцент основных действий.", "Don't объявлять fictional-данные настоящими начислениями, а пример урока авторским курсом.", "Don't приравнивать браузерную проверку к проверке Telegram на устройстве или одобрению пользователя."]
+  }
+}
